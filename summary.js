@@ -1,12 +1,20 @@
-// api/summary.js
-// Vercel serverless function — keeps your API key secure on the server
-// Proxies requests to Anthropic and streams the response back to the browser
-
 export const config = {
-  runtime: 'edge', // Edge runtime = fastest cold start, streams natively
+  runtime: 'edge',
 };
 
 export default async function handler(req) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
+  }
+
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
@@ -28,7 +36,6 @@ export default async function handler(req) {
     return new Response('Missing prompt', { status: 400 });
   }
 
-  // Call Anthropic API with streaming
   const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -40,20 +47,16 @@ export default async function handler(req) {
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 350,
       stream: true,
-      system:
-        'You are a clinical documentation AI. Output ONLY a brief physician intake summary using bullet points. No preamble, no explanation, no extra text. Be extremely concise — 1-2 bullets per section maximum. Always respond in English regardless of input language.',
+      system: 'You are a clinical documentation AI. Output ONLY a brief physician intake summary using bullet points. No preamble. Always respond in English.',
       messages: [{ role: 'user', content: prompt }],
     }),
   });
 
   if (!anthropicRes.ok) {
     const error = await anthropicRes.text();
-    return new Response(`Anthropic error: ${error}`, {
-      status: anthropicRes.status,
-    });
+    return new Response('Anthropic error: ' + error, { status: anthropicRes.status });
   }
 
-  // Stream Anthropic's response directly back to the browser
   return new Response(anthropicRes.body, {
     headers: {
       'Content-Type': 'text/event-stream',
