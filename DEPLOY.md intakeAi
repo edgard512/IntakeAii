@@ -1,0 +1,73 @@
+# IntakeAI — Deployment Guide
+
+## What's In This Folder
+
+```
+intakeai-deploy/
+├── index.html          ← Entry point
+├── package.json        ← Dependencies
+├── vite.config.js      ← Build config
+├── vercel.json         ← Vercel routing config
+├── api/
+│   └── summary.js      ← Serverless function (keeps API key secure)
+└── src/
+    ├── main.jsx        ← React entry
+    └── App.jsx         ← Full IntakeAI demo app
+```
+
+---
+
+## Deploy to Vercel in 10 Minutes (Free)
+
+### Step 1 — Upload to GitHub
+1. Open GitHub Desktop
+2. Add this entire `intakeai-deploy` folder to your `intakeai` repo
+3. Commit → Push
+
+### Step 2 — Connect to Vercel
+1. Go to **vercel.com** → Sign up with GitHub
+2. Click **Add New Project**
+3. Select your `intakeai` repo
+4. Set **Root Directory** to `intakeai-deploy`
+5. Framework: **Vite**
+6. Click **Deploy**
+
+### Step 3 — Add Your API Key
+1. In Vercel → your project → **Settings** → **Environment Variables**
+2. Add:
+   - **Name:** `ANTHROPIC_API_KEY`
+   - **Value:** your key from console.anthropic.com
+3. Click **Save**
+4. Go to **Deployments** → click **Redeploy**
+
+### Step 4 — Your App is Live
+Vercel gives you a URL like: `intakeai-demo.vercel.app`
+
+Connect your custom domain in Settings → Domains.
+
+---
+
+## Getting Your Anthropic API Key
+1. Go to **console.anthropic.com**
+2. Sign up / log in
+3. Click **API Keys** → **Create Key**
+4. Copy the key — paste it into Vercel as shown above
+
+---
+
+## Sharing With Trial Customers
+
+**Patient intake form:**
+`https://your-app.vercel.app`
+
+**Send this link to practices** — patients fill it out on their phone before appointments. The doctor sees the AI summary automatically in the dashboard view.
+
+---
+
+## What This Fixes vs The Demo
+- ✅ API key is secure (server-side, not visible in browser)
+- ✅ Works on all mobile devices
+- ✅ No Claude.ai account needed
+- ✅ Faster response (edge runtime)
+- ✅ Your own URL / domain
+- ✅ Shareable with any practice

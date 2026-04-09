@@ -1,0 +1,284 @@
+# IntakeAI 🏥
+
+> AI-powered bilingual patient intake automation for private practice doctors.
+> Patients fill out a smart intake form → AI instantly generates a structured clinical summary for the doctor.
+
+---
+
+## What Is IntakeAI?
+
+IntakeAI eliminates the #1 administrative burden in private medical practices: manual patient intake. Instead of paper forms and staff re-entering data, patients complete a digital intake form (in English or Spanish), and the AI instantly generates a physician-ready clinical summary — before the appointment even starts.
+
+**Built for:** Independent family practice doctors in the US, with a focus on bilingual (English/Spanish) practices in Texas, Florida, California, and the Southwest.
+
+---
+
+## The Problem We Solve
+
+| Without IntakeAI | With IntakeAI |
+|---|---|
+| Paper or PDF intake forms | Smart digital form on any device |
+| Staff manually entering patient data | AI processes and structures data instantly |
+| Doctor reads raw form during visit | Doctor receives structured clinical summary |
+| English-only intake at most practices | Full English + Spanish support |
+| No integration with clinical workflow | EHR-ready export (Phase 2) |
+
+---
+
+## Product Suite
+
+### 1. Patient Intake Form (Bilingual)
+**File:** `patient-intake-bilingual.jsx`
+
+Patient-facing intake form with full English/Spanish toggle. Covers:
+- Personal information (name, DOB, sex, contact)
+- Reason for visit and symptom description
+- Pain scale (0–10)
+- Medical history and chronic conditions
+- Prior surgeries and family history
+- Lifestyle (smoking, alcohol)
+- Current medications, allergies, and supplements
+- Review step before submission
+- AI-generated clinical summary output
+
+**Language behavior:** Patient submits in either language. Clinical summary is always generated in English for the physician.
+
+---
+
+### 2. Doctor Dashboard (Bilingual)
+**File:** `doctor-dashboard-bilingual.jsx`
+
+Physician-facing dashboard with full English/Spanish UI toggle. Features:
+- Daily patient queue with status tracking (Waiting / In Progress / Completed)
+- Search patients by name or date of birth
+- Filter by visit status
+- One-click AI clinical summary generation per patient
+- Patient detail view with 3 tabs: Summary, Intake, History
+- Copy summary to clipboard for EHR pasting
+- Mark patients complete
+- Analytics tab: top conditions, visit types, pain distribution
+
+---
+
+### 3. Revenue Showcase
+**File:** `revenue-showcase.jsx`
+
+Interactive 5-year revenue projection model (2025–2029). Features:
+- Year-by-year ARR, MRR, customers, profit, and churn projections
+- Animated count-up KPIs on year selection
+- Monthly MRR bar chart with hover tooltips
+- Revenue by customer segment (Solo / Group / Enterprise)
+- Annual P&L summary
+- Key milestones per year
+- All-years overview chart
+
+---
+
+### 4. Bilingual Revenue Impact Analysis
+**File:** `bilingual-revenue-impact.jsx`
+
+Side-by-side comparison of English-only vs bilingual revenue trajectories. Three tabs:
+- **Year-by-Year Comparison** — Animated KPIs, dual bar charts, full comparison table
+- **Market Opportunity** — 67M US Spanish speakers, top state breakdown, market insights
+- **Pricing Strategy** — Bilingual tier pricing, 30% adoption impact calculator, ROI card
+
+**Key finding:** Adding bilingual support adds an estimated **+$10.1M** over 5 years vs English-only.
+
+---
+
+## Business Documents
+
+### HIPAA Business Associate Agreement
+**File:** `IntakeAI_BAA_Template.docx`
+
+Full 9-section BAA template covering:
+- Permitted uses and disclosures of PHI
+- Required security safeguards (AES-256, TLS, MFA, RBAC, audit logs)
+- Subcontractor BAA requirements (Supabase, AWS, Anthropic listed)
+- Breach notification requirements (60-day rule)
+- Term, termination, and data destruction
+- Indemnification and governing law
+- Dual signature blocks
+
+> ⚠️ Have a healthcare attorney review before use. Fill in your state in Section 8.3.
+
+---
+
+### Supabase Database Schema
+**File:** `intakeai_schema.sql`
+
+HIPAA-compliant PostgreSQL schema for Supabase. Includes:
+
+| Table | Purpose |
+|---|---|
+| `practices` | Each medical practice (tenant) |
+| `providers` | Doctors and staff within a practice |
+| `patients` | Patient demographics (PHI) |
+| `appointments` | Scheduled visits |
+| `intake_forms` | Raw intake form submissions |
+| `clinical_summaries` | AI-generated summaries (auditable) |
+| `audit_log` | HIPAA-required access log (6-year retention) |
+| `intake_tokens` | Secure one-time patient form links (48hr expiry) |
+
+All tables have Row Level Security (RLS) enabled. Providers only see their own practice's data.
+
+---
+
+## Tech Stack
+
+### Current (Demo / MVP)
+| Layer | Technology |
+|---|---|
+| Frontend | React (JSX artifacts) |
+| AI Engine | Claude API (claude-sonnet-4-20250514) |
+| Data | Mock data (in-memory) |
+| Hosting | claude.ai artifacts |
+
+### Production (Recommended)
+| Layer | Technology | Monthly Cost |
+|---|---|---|
+| Frontend hosting | AWS Amplify | ~$20 |
+| Database | Supabase Pro | $25 |
+| Auth | Supabase Auth (MFA) | Included |
+| AI API | Anthropic Claude + BAA | Usage-based |
+| Email | AWS SES | ~$5 |
+| File storage | Supabase Storage | Included |
+| **Total** | | **~$50–80/mo** |
+
+---
+
+## HIPAA Compliance Checklist
+
+Before going live with real patient data:
+
+- [ ] Sign BAA with **Supabase** (available on Pro plan)
+- [ ] Sign BAA with **Anthropic** — email privacy@anthropic.com
+- [ ] Sign BAA with **AWS** (if using any AWS services)
+- [ ] Prepare your own **BAA template** to give to each practice (use `IntakeAI_BAA_Template.docx`)
+- [ ] Enable **MFA** on all provider accounts
+- [ ] Configure **session timeouts** (15 min idle)
+- [ ] Set up **audit logging** (use `audit_log` table)
+- [ ] Publish **Privacy Policy** and **Terms of Service**
+- [ ] Publish **HIPAA Notice of Privacy Practices**
+- [ ] Run annual **security risk assessment**
+
+---
+
+## Pricing
+
+| Plan | English | + Bilingual |
+|---|---|---|
+| Solo Practice (1 provider) | $299/mo | $379/mo |
+| Group Practice (up to 10 providers) | $499/mo | $599/mo |
+| Enterprise (unlimited providers) | $2,500/mo | $2,800/mo |
+
+---
+
+## Go-To-Market Strategy
+
+### Phase 1 — Seed (Year 1, 2025)
+- Direct outreach to 50 independent practices in Austin / Pflugerville / Round Rock
+- Free 30-day trials to close first 10 customers
+- Focus: solo family practice doctors
+- Target: 25 paying practices, $7.5K MRR
+
+### Phase 2 — Growth (Year 2, 2026)
+- EHR integrations (Epic, Athenahealth, DrChrono)
+- Referral program
+- Group practice and enterprise tiers
+- Target: 95 practices, $41.7K MRR
+
+### Phase 3 — Scale (Year 3, 2027)
+- Series A fundraise (~$4M)
+- Sales team of 4 reps
+- White-label product for medical groups
+- AI billing code suggestions (CPT/ICD)
+- Target: 280 practices, $120K MRR
+
+### Phase 4–5 — Dominate (Years 4–5, 2028–2029)
+- Hospital system contracts
+- International expansion (Canada, UK)
+- Series B
+- Target: $10M+ ARR
+
+---
+
+## Top 10 Prospect Practices (Austin Area)
+
+| # | Practice | Phone | Priority |
+|---|---|---|---|
+| 1 | Clinica Hispana Rubymed — Riverside | (512) 271-9357 | 🔥 Bilingual |
+| 2 | Clinica Hispana Rubymed — Cameron | (512) 524-6888 | 🔥 Bilingual |
+| 3 | Clinica Hispana Round Rock | (737) 203-8671 | 🔥 Bilingual |
+| 4 | AMD Clinica Hispana | (512) 432-5102 | 🔥 Bilingual |
+| 5 | Clinica Hispana Nazaret | (512) 428-4484 | 🔥 Bilingual |
+| 6 | Rosedale Family Care Partners | (512) 459-9889 | ⭐ English |
+| 7 | Dr. Merlin Abraham — Pflugerville | (512) 989-2680 | ⭐ English |
+| 8 | Dr. Brynna Connor | (512) 382-9500 | ⭐ English |
+| 9 | Total Health Primary Care — Greenlawn | (512) 200-2269 | ⭐ English |
+| 10 | Family First Healthcare — Cat Hollow | (737) 279-5700 | ⭐ English |
+
+---
+
+## Cold Email Template
+
+**Subject:** Cut patient intake time in half — bilingual too
+
+> Hi Dr. [Name],
+>
+> I built a tool that turns patient intake forms into ready-to-read clinical summaries before the appointment starts — in both English and Spanish.
+>
+> Takes 2 minutes to set up, zero change to your current workflow.
+>
+> I'm offering free 30-day trials to 10 practices in Austin this month. Would you be open to a quick demo this week?
+>
+> — [Your name]
+
+---
+
+## Revenue Projections (Summary)
+
+| Year | ARR (English Only) | ARR (+ Bilingual) | Uplift |
+|---|---|---|---|
+| 2025 | $71,880 | $101,640 | +$29,760 |
+| 2026 | $419,880 | $655,200 | +$235,320 |
+| 2027 | $1,440,000 | $2,268,000 | +$828,000 |
+| 2028 | $4,200,000 | $6,720,000 | +$2,520,000 |
+| 2029 | $10,800,000 | $17,280,000 | +$6,480,000 |
+| **5-Year Total** | **$16,931,760** | **$27,024,840** | **+$10,093,080** |
+
+---
+
+## Project Structure
+
+```
+IntakeAI/
+├── README.md                          ← You are here
+├── apps/
+│   ├── patient-intake-bilingual.jsx   ← Patient-facing intake form (EN + ES)
+│   ├── patient-intake-mvp.jsx         ← Original English intake form
+│   ├── doctor-dashboard-bilingual.jsx ← Doctor dashboard (EN + ES)
+│   └── doctor-dashboard.jsx           ← Original English dashboard
+├── revenue/
+│   ├── revenue-showcase.jsx           ← 5-year projections
+│   └── bilingual-revenue-impact.jsx   ← Bilingual vs English comparison
+└── business/
+    ├── IntakeAI_BAA_Template.docx     ← HIPAA BAA template
+    └── intakeai_schema.sql            ← Supabase database schema
+```
+
+---
+
+## Next Steps
+
+- [ ] Set up GitHub repo and push all files
+- [ ] Deploy intake form to Vercel (free tier for demo)
+- [ ] Send cold emails to 50 practices this week
+- [ ] Book 5 demos
+- [ ] Close first 3 free trials
+- [ ] Sign up for Supabase Pro and connect BAA
+- [ ] Email privacy@anthropic.com to initiate BAA
+
+---
+
+*Built with Claude (Anthropic) · IntakeAI LLC · Austin, TX*
