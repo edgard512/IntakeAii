@@ -244,13 +244,7 @@ SOCIAL HISTORY
       const res = await fetch"/api/summary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 350,
-          stream: true,
-          system: "You are a clinical documentation AI. Output ONLY a brief physician intake summary using bullet points. No preamble, no explanation, no extra text. Be extremely concise — 1-2 bullets per section maximum. Always respond in English regardless of input language.",
-          messages: [{ role: "user", content: prompt }],
-        }),
+       body: JSON.stringify({ prompt }),
       });
 
       clearInterval(dotInterval);
