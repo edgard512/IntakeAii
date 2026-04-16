@@ -1,8 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
+const { createClient } = require('@supabase/supabase-js');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin1234';
@@ -24,6 +24,6 @@ export default async function handler(req, res) {
     .select('id, name, specialty, slug')
     .single();
 
-  if (error) return res.status(500).json({ error: 'Failed to add doctor' });
+  if (error) return res.status(500).json({ error: 'Failed to add doctor: ' + error.message });
   res.json({ success: true, doctor: data });
-}
+};
