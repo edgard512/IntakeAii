@@ -6,7 +6,7 @@ module.exports = async function handler(req, res) {
   const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin1234';
 
   const supabase = createClient(
-    process.env.SUPABASE_URL || 'https://kvnezyatdmdsmdfkdhyw.supabase.co',
+    process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2bmV6eWF0ZG1kc21kZmtkaHl3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjI2NzU3NCwiZXhwIjoyMDkxODQzNTc0fQ.y6iNIDyK8YsXhveqQJDemh7BzEX3W6F7BOuMjUP6p3Y',
     process.env.SUPABASE_SERVICE_KEY
   );
 
