@@ -5,7 +5,7 @@ module.exports = async function handler(req, res) {
 
   const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin1234';
   const supabaseUrl = process.env.SUPABASE_URL || 'https://kvnezyatdmdsmdfkdhyw.supabase.co';
-  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  const supabaseKey = process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
   // Debug — return all env var names so we can see what's available
   if (!supabaseKey) {
