@@ -5,10 +5,17 @@ module.exports = async function handler(req, res) {
 
   const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin1234';
 
-const supabase = createClient(
-    'https://kvnezyatdmdsmdfkdhyw.supabase.co',
-    process.env.SUPABASE_SERVICE_KEY
-  );
+  const supabaseUrl = process.env.SUPABASE_URL || 'https://kvnezyatdmdsmdfkdhyw.supabase.co';
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+  if (!supabaseKey) {
+    return res.status(500).json({ 
+      error: 'Missing SUPABASE_SERVICE_KEY',
+      availableVars: Object.keys(process.env).filter(k => k.includes('SUPA') || k.includes('supa'))
+    });
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { adminSecret } = req.body;
   if (adminSecret !== ADMIN_SECRET) return res.status(401).json({ error: 'Unauthorized' });
@@ -19,7 +26,6 @@ const supabase = createClient(
     .order('name');
 
   if (error) {
-    console.error('Supabase error:', error);
     return res.status(500).json({ error: 'Server error: ' + error.message });
   }
 
