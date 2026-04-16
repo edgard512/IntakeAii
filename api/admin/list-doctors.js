@@ -4,18 +4,11 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin1234';
-  const supabaseUrl = process.env.SUPABASE_URL || 'https://kvnezyatdmdsmdfkdhyw.supabase.co';
-  const supabaseKey = process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
-  // Debug — return all env var names so we can see what's available
-  if (!supabaseKey) {
-    return res.status(500).json({ 
-      error: 'SUPABASE_SERVICE_KEY is missing',
-      envVarsAvailable: Object.keys(process.env).join(', ')
-    });
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY
+  );
 
   const { adminSecret } = req.body;
   if (adminSecret !== ADMIN_SECRET) return res.status(401).json({ error: 'Unauthorized' });
@@ -25,7 +18,10 @@ module.exports = async function handler(req, res) {
     .select('id, name, specialty, slug, created_at')
     .order('name');
 
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) {
+    console.error('Supabase error:', error);
+    return res.status(500).json({ error: 'Server error: ' + error.message });
+  }
 
   res.json({ doctors: data || [] });
 };
