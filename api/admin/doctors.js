@@ -8,7 +8,7 @@ module.exports = async function handler(req, res) {
   const ADMIN_SECRET = process.env.ADMIN_SECRET || 'admin1234';
   const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY
+    process.env.SUPABASE_KEY
   );
 
   const { adminSecret, name, specialty, pin } = req.body;
