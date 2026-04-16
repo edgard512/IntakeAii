@@ -2,14 +2,14 @@ const { createClient } = require('@supabase/supabase-js');
 const bcrypt = require('bcryptjs');
 
 module.exports = async function handler(req, res) {
-  if (req.method !== 'PATCH') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY
+    process.env.SUPABASE_KEY
   );
 
-  const { slug, pin, status, ai_summary } = req.body;
+  const { slug, pin } = req.body;
   if (!slug || !pin) return res.status(400).json({ error: 'Missing credentials' });
 
   const { data: doctor, error: docErr } = await supabase
@@ -18,22 +18,18 @@ module.exports = async function handler(req, res) {
     .eq('slug', slug)
     .single();
 
-  if (docErr || !doctor) return res.status(401).json({ error: 'Invalid credentials' });
+  if (docErr || !doctor) return res.status(401).json({ error: 'Invalid PIN' });
   const valid = await bcrypt.compare(pin, doctor.pin_hash);
-  if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+  if (!valid) return res.status(401).json({ error: 'Invalid PIN' });
 
-  const updates = {};
-  if (status !== undefined) updates.status = status;
-  if (ai_summary !== undefined) updates.ai_summary = ai_summary;
-
-  if (!Object.keys(updates).length) return res.status(400).json({ error: 'Nothing to update' });
-
-  const { error } = await supabase
+  const today = new Date().toISOString().split('T')[0];
+  const { data: patients, error: patErr } = await supabase
     .from('patients')
-    .update(updates)
-    .eq('id', req.query.id)
-    .eq('doctor_id', doctor.id);
+    .select('*')
+    .eq('doctor_id', doctor.id)
+    .gte('submitted_at', today + 'T00:00:00')
+    .order('submitted_at', { ascending: false });
 
-  if (error) return res.status(500).json({ error: 'Update failed' });
-  res.json({ success: true });
+  if (patErr) return res.status(500).json({ error: 'Server error' });
+  res.json({ patients: patients || [] });
 };
