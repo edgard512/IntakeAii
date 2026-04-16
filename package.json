@@ -1,8 +1,7 @@
 {
   "name": "intakeai",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
